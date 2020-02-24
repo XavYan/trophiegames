@@ -2,6 +2,7 @@
 
 from lxml import etree
 import json
+import sys
 
 def sortById (element):
     return element.attrib["id"] 
@@ -37,31 +38,26 @@ def convertToJson (input, output):
 
         jsonElement["plataforma"] = platArray
 
-        # Reemplazamos la comillas simples por dobles
-        # json = str(jsonElement).replace("'", '"')
-
         # Añadimos el json al array
         jsonArray.append(jsonElement)
 
     # Escribimos el array en el fichero
     outputFile.write("[")
     for index, jsonData in enumerate(jsonArray):
-        outputFile.write(json.dumps(jsonData))
+        outputFile.write(json.dumps(jsonData, ensure_ascii=False))
         if index < len(jsonArray) - 1:
             outputFile.write(',')
     outputFile.write("]")
 
-# Declaramos las variables con los nombres de los ficheros a leer
-inputData = "testData1.xml"
-outputData = "resultTest1.json"
+    # Cerramos el fichero de salida
+    outputFile.close()
 
-# Abrimos los ficheros
-# inputF = open (inputData, "r")
-# outputF = open (outputData, "w")
+if len(sys.argv) != 3:
+    print("ERROR! Necesitamos dos parametros para funcionar: inputfile y outputfile")
+else:
+    # Declaramos las variables con los nombres de los ficheros a leer
+    inputData = sys.argv[1]
+    outputData = sys.argv[2]
 
-# Ejecutamos la transformacion de XML a JSON
-convertToJson(inputData, outputData)
-
-# Cerramos los ficheros
-# inputF.close()
-# outputF.close()
+    # Ejecutamos la transformacion de XML a JSON
+    convertToJson(inputData, outputData)
