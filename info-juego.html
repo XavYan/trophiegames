@@ -109,26 +109,26 @@
         <!-- Contenido de la pagina -->
         <div class="container-fluid row justify-content-center no-gutters no-padding mb-5">
             <div class="container no-gutters no-padding p-3 pb-4">
-                <h2 class="text-center">Batman: Arkham Knight</h2>
+                <h2 id="gameTitle" class="text-center"></h2>
             </div>
             <div class="container no-gutters no-padding row justify-content-center">
                 <div class="container-fluid row justify-content-xl-around justify-content-center">
-                    <div class="col-xl-6 row justify-content-center"><img style="border: 1px solid #333333" src="img/batman_arkham_knight.jpg" /></div>
+                    <div class="col-xl-6 row justify-content-center"><img id="gameImg" style="border: 1px solid #333333" src="" /></div>
                     <div class="container col-xl-6 pt-5 pl-2">
                         <h3>SINOPSIS</h3>
-                        <p class="text-justify">Batman: Arkham Knight es un nuevo videojuego de Batman que cerrará la saga "Arkham" del personaje de DC Comics en los videojuegos. Desarrollado por los creadores de Arkham Asylum y Arkham City, el título tiene lugar un año después de los sucesos de éste, enfrentándose Batman de nuevo a un grupo de villanos, liderados por el misterioso Arkham Knight. Volveremos a contar con libertad para explorar Gotham, y esta vez podremos conducir el Batmóvil.</p>
+                        <p id="gameDescription" class="text-justify"></p>
                     </div>
                 </div>
                 <div class="container row justify-content-between">
                     <div class="container-fluid no-gutters no-padding p-3 pr-5 col-xl-6">
                         <p class="game-info-size no-gutters text-justify"><span class="game-info">Lanzamiento:
-                            </span>23-06-2015</p><br />
+                            </span><span id="gameYear"></span></p><br />
                         <p class="game-info-size no-gutters text-justify"><span class="game-info">Plataforma:
-                            </span>Playstation 4, XBOX ONE</p><br />
+                            </span><span id="gamePlat"></span></p><br />
                         <p class="game-info-size no-gutters text-justify"><span class="game-info">Desarrollador:
-                            </span>Rocksteady Studios, Iron Galaxy Studios</p><br />
+                            </span><span id="gameDv"></span></p><br />
                         <p class="game-info-size no-gutters text-justify"><span class="game-info">Distribuidor:
-                            </span>Warner Bros. Interactive Entertainment</p>
+                            </span><span id="gameDt"></p>
                     </div>
                     <!-- Valoracion de usuarios -->
                     <div class="container-fluid col-xl-6 pl-3">
@@ -225,12 +225,7 @@
     <script src="js/isLogged.js"></script>
 
     <script src="js/events.js"></script>
-    
-    <!-- Ejecutamos la lectura de la base de datos de firebase -->
-    <script>
-        get_valorations('valoraciones_juegos', 3);
-        get_trophies(3);
-    </script>
+    <script src="js/info-juego.js"></script>
 
 </body>
 

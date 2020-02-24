@@ -13,3 +13,6 @@ var firebaseConfig = {
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 firebase.analytics();
+
+// Declarando variables
+var db = firebase.database();

@@ -1,6 +1,4 @@
 // Variables globales
-var db = firebase.database();
-
 var lista_trofeos = document.getElementById('lista-trofeos');
 var porcentaje_positivos = document.getElementById('porc-positivos');
 var porcentaje_negativos = document.getElementById('porc-negativos');
