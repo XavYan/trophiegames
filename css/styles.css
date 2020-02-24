@@ -71,7 +71,8 @@ img {
 
 #background-page {
     background-color: white;
-    max-width: 1200px;
+    /* max-width: 1200px; */
+    width: 1200px;
 }
 
 @media only screen and (max-width: 768px) {
@@ -277,13 +278,12 @@ img {
     padding-top: 15px;
 }
 
-.cc-logo {
-    height: 30px;
-    width: 30px;
+.footer-text-style {
+    color: white;
+    font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
 }
 
 .footer-text {
-    color: #FD6721;
     font-size: 17px;
     padding-right: 10px;
 }
