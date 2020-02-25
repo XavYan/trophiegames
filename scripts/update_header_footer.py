@@ -2,6 +2,9 @@
 
 import os
 
+# Ficheros que no se deben editar
+not_editable = ["plantilla.html", "signin.html", "login.html", "perfil.html"]
+
 # Obtenemos el header y el footer de la plantilla
 plantilla = open("plantilla.html", "r")
 plantContent = plantilla.read()
@@ -17,9 +20,6 @@ plantFooter = plantContent[plantBeginFooterIndex:plantEndFooterIndex+1]
 
 # Obtenemos todos los ficheros HTML del proyecto
 filenames = []
-
-# Ficheros que no se deben editar
-not_editable = ["plantilla.html", "signin.html", "login.html", "perfil.html"]
 
 for root, dirs, files in os.walk('.'):
     for filename in files:
