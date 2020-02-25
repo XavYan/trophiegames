@@ -18,9 +18,12 @@ plantFooter = plantContent[plantBeginFooterIndex:plantEndFooterIndex+1]
 # Obtenemos todos los ficheros HTML del proyecto
 filenames = []
 
+# Ficheros que no se deben editar
+not_editable = ["plantilla.html", "signin.html", "login.html", "perfil.html"]
+
 for root, dirs, files in os.walk('.'):
     for filename in files:
-        if os.path.splitext(filename)[1] == ".html" and filename != "plantilla.html":
+        if os.path.splitext(filename)[1] == ".html" and not filename in not_editable:
             filenames.append(filename)
 
 for filename in filenames:
