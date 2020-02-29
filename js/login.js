@@ -1,7 +1,5 @@
 var GoogleProvider = new firebase.auth.GoogleAuthProvider();
 
-var db = firebase.database();
-
 // Recogemos los datos
 var email = $('#email');
 var passwd = $('#passwd');
@@ -37,7 +35,6 @@ var googleSubmit = document.getElementById('google-register');
 
 googleSubmit.addEventListener('click', event => {
     firebase.auth().signInWithPopup(GoogleProvider).then(result => {
-        var googleToken = result.credential.accessToken;
         googleUser = result.user;
         console.log(googleUser);
 

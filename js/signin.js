@@ -1,9 +1,5 @@
 var GoogleProvider = new firebase.auth.GoogleAuthProvider();
 
-// GoogleProvider.addScope('https:://www.googleapis.com/auth/plus.login');
-
-var db = firebase.database();
-
 // Recogemos los campos del formulario
 var inputs = document.querySelectorAll('form#form-registro > div > input');
 
@@ -37,34 +33,45 @@ submitForm.addEventListener('click', event => {
     });
 
     if (!error) {
-        registerUserData($('#user').val(), $('#email').val(), $('#nacimiento').val(), $('#mensaje').val());
-        setTimeout(() => { window.location = 'index.html'; }, 1000);
+        setTimeout(() => {
+            registerUserData($('#user').val(), $('#nacimiento').val(), $('#mensaje').val());
+        }, 2000);
+        setTimeout(() => { window.location = 'index.html'; }, 3000);
     }
 });
 
 // funciones para autenticacion
-function registerUserData(nombre, email, nacimiento, mensaje) {
-    // Determinamos el tamaño de la tabla
-    db.ref('usuarios').once('value', snap => {
-        var sz = snap.val().length;
-        db.ref('usuarios/' + sz).set({
-            nombre: nombre,
-            email: email,
-            fecha_nacimiento: nacimiento,
-            mensaje: mensaje,
-            pais: "españa",
-            imagen: "https://firebasestorage.googleapis.com/v0/b/trophie-games.appspot.com/o/login_icon.png?alt=media&token=47045fca-5d6b-4010-9171-673d1df5ca73"
-        });
+function registerUserData(nombre, nacimiento, mensaje, img = "https://firebasestorage.googleapis.com/v0/b/trophie-games.appspot.com/o/login_icon.png?alt=media&token=47045fca-5d6b-4010-9171-673d1df5ca73") {
+    if (mensaje == null) {
+        mensaje = "Null"
+    }
+
+    var user = firebase.auth().currentUser;
+
+    user.updateProfile({
+        displayName: nombre,
+        photoURL: img,
+    }).catch (error => {
+        let errorCode = error.code;
+        let errorMessage = error.message;
+        console.log(errorCode + ": " + errorMessage);
+    });
+
+    // Añadimos los datos restantes a la base de datos
+    db.ref('usuarios/' + user.uid).set({
+        fecha_nacimiento: nacimiento,
+        mensaje: mensaje,
+        pais: "españa"
     });
 }
 
 googleSubmit.addEventListener('click', event => {
     firebase.auth().signInWithPopup(GoogleProvider).then(result => {
-        var googleToken = result.credential.accessToken;
+        googleToken = result.credential.accessToken;
         googleUser = result.user;
         console.log(googleUser);
 
-        registerUserData(googleUser.displayName, googleUser.email, '', '');
+        registerUserData(googleUser.displayName, '', null, googleUser.photoURL);
 
         setTimeout(() => { window.location = 'index.html'; }, 1000);
 
@@ -79,8 +86,16 @@ googleSubmit.addEventListener('click', event => {
 
 // Funciones de validacion de campos
 function validateAll() {
+    var result = true;
 
-    return validateUsername() && validatePassword() && validateConfirmPassword() && validateEmail() && validateConfirmEmail() && validatePersonalMessage();
+    if (!validateUsername()) result = false;
+    if (!validatePassword()) result = false;
+    if (!validateConfirmPassword()) result = false;
+    if (!validateEmail()) result = false;
+    if (!validateConfirmEmail()) result = false;
+    if (!validatePersonalMessage()) result = false;
+
+    return result;
 }
 
 function validateUsername() {
@@ -90,21 +105,13 @@ function validateUsername() {
         return false;
     }
 
-    // Leemos de la base de datos de firebase
-    db.ref('usuarios').once('value', snap => {
-        let found = false;
-        for (userData of snap.val()) {
-            if (userData.nombre.toLowerCase() == user.value.toLowerCase()) {
-                found = true;
-                break;
-            }
-        }
-        if (found) {
-            usuario.removeClass('valid-form').addClass('invalid-form');
-        } else {
-            usuario.removeClass('invalid-form').addClass('valid-form');
-        }
-    });
+    // El nombre de usuario no puede tener mas de 10 caracteres, y no puede empezar por un numero
+    if (usuario.val().length > 10 || (/^[0-9]/).test(usuario.val())) {
+        usuario.removeClass('valid-form').addClass('invalid-form');
+    } else {
+        usuario.removeClass('invalid-form').addClass('valid-form');
+    }
+
     return usuario.hasClass('valid-form');
 }
 
@@ -160,7 +167,6 @@ function validateEmail() {
 }
 
 function validateConfirmEmail() {
-    // TODO: Validar confirmacion de email
     let cemail = $('#cemail');
 
     if (cemail.val() == '') {

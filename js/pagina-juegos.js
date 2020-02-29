@@ -12,7 +12,6 @@ var lista_juegos = document.getElementById('lista-juegos');
 db.ref('juegos').once('value', snap => {
     games = snap.val();
     lista_juegos.innerHTML = '';
-
     games.forEach((data, index) => {
         lista_juegos.innerHTML += `
         <div class="m-1">

@@ -27,6 +27,25 @@
     <div id="background-page" class="container row justify-content-center" style="background: #043565;">
         <!-- Aqui va el codigo de la pagina -->
 
+        <!-- Modal de confirmacion -->
+        <!-- <div id="confirm-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="confirm-modal"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Confirmación</h5>
+                    </div>
+                    <div class="modal-body ml-3 mr-3">
+                        <div class="container row justify-content-center align-items-center">
+                            <p class="footer-text-style text-dark">Se te redigirá a la página de inicio de sesión para que confirmes tus credenciales</p>
+                            <input id="confirm-reload" type="button" class="btn btn-success m-1" value="Confirmar">
+                            <input type="button" class="btn btn-danger m-1" data-dismiss="modal" value="Cancelar">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+
         <!-- Modal para la imagen -->
         <div id="img-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="img-modal"
             aria-hidden="true">
@@ -45,8 +64,6 @@
                                         subir</label>
                                 </div>
                             </div>
-                            <!-- <button id="confirmar-img" type="button" class="btn btn-sm button p-2 pl-3 pr-3 mt-2"
-                                style="font-size: 20px;">Confirmar</button> -->
                         </div>
                     </div>
                 </div>
@@ -122,8 +139,8 @@
                                 <input type="email" class="form-control" id="input-actual-email-delete">
                             </div>
                             <div class="container p-2">
-                                <label for="input-actual-passwd-email">Contraseña</label>
-                                <input type="password" class="form-control" id="input-actual-passwd-email">
+                                <label for="input-actual-passwd-delete">Contraseña</label>
+                                <input type="password" class="form-control" id="input-actual-passwd-delete">
                             </div>
                             <button id="confirmar-delete" type="button" class="btn btn-sm button p-2 pl-3 pr-3 mt-3"
                                 style="font-size: 20px; margin-left: 0;">Confirmar</button>
@@ -217,13 +234,13 @@
                 </div>
                 <div class="container mt-2">
                     <div class="container pb-4">
-                        <p class="no-gutters text-info-perfil">Correo electrónico: <span id="user-email"
+                        <p class="no-gutters text-info-perfil footer-text-style">Correo electrónico: <span id="user-email"
                                 style="color: #404040;"></span></p>
-                        <button type="button" data-toggle="modal" data-target="#email-modal"
+                        <button id="act-correo" type="button" data-toggle="modal" data-target="#email-modal"
                             class="btn btn-sm button p-2 mt-1">Actualizar correo electrónico</button>
                     </div>
                     <div class="container pb-5">
-                        <p class="no-gutters text-info-perfil">Mensaje personal: <span id="user-personal-message"
+                        <p class="no-gutters text-info-perfil footer-text-style">Mensaje personal: <span id="user-personal-message"
                                 style="color: #404040;"></span></p>
                         <button type="button" data-toggle="modal" data-target="#message-modal"
                             class="btn btn-sm button p-2 mt-1">Actualizar mensaje personal</button>
@@ -232,7 +249,7 @@
             </div>
             <div class="jumbotron container p-4 no-padding ml-3 mr-3">
                 <h3 class="pb-3">Zona peligrosa</h3>
-                <button type="button" data-toggle="modal" data-target="#passwd-modal"
+                <button id="act-passwd" type="button" data-toggle="modal" data-target="#passwd-modal"
                     class="btn btn-danger btn-lg btn-block">Cambiar contraseña</button>
                 <button id="deleteAccount" data-toggle="modal" data-target="#delete-modal" type="button"
                     class="btn btn-danger btn-lg btn-block">Eliminar cuenta</button>
@@ -261,6 +278,7 @@
 
         <script src="js/firebase.js"></script>
 
+        <script src="js/isLogged.js"></script>
         <script src="js/perfil.js"></script>
 
 </body>
