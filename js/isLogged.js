@@ -36,14 +36,20 @@ if ($('#perfilRequest').length > 0 && $('#close-session').length > 0) {
     });
     
     document.getElementById('close-session').addEventListener('click', event => {
-        // Cerrramos sesion
-        firebase.auth().signOut().then( () => {
-            // Sign-out successful
+        close_session(true);
+    });
+}
+
+function close_session(reload) {
+    // Cerrramos sesion
+    firebase.auth().signOut().then( () => {
+        // Sign-out successful
+        if (reload) {
             location.reload();
-        }).catch (error => {
-            // An error happened
-            console.log(error.code + ": " + error.message);
-        });
+        }
+    }).catch (error => {
+        // An error happened
+        console.log(error.code + ": " + error.message);
     });
 }
 
@@ -126,6 +132,18 @@ function deleteUser (email, passwd) {
         
     }).catch(error => {
         alert(error.code + ': ' + error.message);
+    });
+}
+
+function solDeleteGoogleUser () {
+    emailjs.send("gmail", "delaccount_request", {
+        "user_uid":USERDATA.uid,
+        "user_name":USERDATA.displayName,
+        "user_email":USERDATA.email
+    }).then(() => {
+        alert("Solicitud tramitada correctamente");
+        close_session(false);
+        window.location = "index.html";
     });
 }
 

@@ -1,9 +1,13 @@
 // Descargamos los datos del usuario
-setTimeout( () => {
+setTimeout(() => {
 
     if (USERDATA.providerData[0].providerId == "google.com") {
         $('#act-correo').attr('disabled', true);
         $('#act-passwd').attr('disabled', true);
+        $('#input-actual-email-delete-label').addClass('hide-object');
+        $('#input-actual-email-delete').addClass('hide-object');
+        $('#input-actual-passwd-delete-label').addClass('hide-object');
+        $('#input-actual-passwd-delete').addClass('hide-object');
     }
 
     $('#name-user').text(USERDATA.displayName.charAt(0).toUpperCase() + USERDATA.displayName.slice(1));
@@ -18,7 +22,7 @@ setTimeout( () => {
             $('#user-personal-message').text('No dispone de ningún mensaje personal.');
         }
     });
-    
+
 }, 1000);
 
 document.getElementById('input-img-file').addEventListener('change', event => {
@@ -48,7 +52,7 @@ document.getElementById('confirmar-email').addEventListener('click', event => {
 
 document.getElementById('confirmar-message').addEventListener('click', event => {
     var data = $('#input-new-message').val();
-    
+
     changePersonalMessage(data);
 
     setTimeout(() => { location.reload(); }, 1000);
@@ -59,17 +63,19 @@ document.getElementById('confirmar-passwd').addEventListener('click', event => {
 
     var actual_email = $('#input-actual-email-passwd').val();
     var actual_passwd = $('#input-actual-passwd-passwd').val();
-    
+
     changePassword(actual_email, actual_passwd, data);
 });
 
 document.getElementById('confirmar-delete').addEventListener('click', event => {
 
-    var email = $('#input-actual-email-delete').val();
-    var passwd = $('#input-actual-passwd-delete').val();
-    
-    console.log(email + " " + passwd);
+    if (USERDATA.providerData[0].providerId != "google.com") {
+        var email = $('#input-actual-email-delete').val();
+        var passwd = $('#input-actual-passwd-delete').val();
 
-    deleteUser(email, passwd);
+        deleteUser(email, passwd);
+    } else {
+        solDeleteGoogleUser();
+    }
 
 });
