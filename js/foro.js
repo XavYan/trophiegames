@@ -26,7 +26,7 @@ db.ref('foros/' + id).once('value', snap => {
 
     titulo_foro.innerHTML = data.titulo;
 
-    db.ref('usuarios/' + data.id_usuario).once('value', snap => {
+    db.ref('usuarios/' + data.uid).once('value', snap => {
         creador.innerHTML += '<p class="text-center font-italic pt-1">Creado por ' + snap.val().nombre + ' el ' + data.fecha_creacion + ' a las ' + data.hora_creacion + '</p>';
     });
 });
@@ -37,36 +37,39 @@ db.ref('comentarios_foros').once('value', snap => {
         if (comentario.id_foro == id) {
             // Metemos los datos del usuario
             lista_comentarios.innerHTML += '<div id="comentario-' + index + '" class="row no-padding no-gutters foro justify-content-start mt-2 mb-2"></div>'
-            db.ref('usuarios/' + comentario.id_usuario).once('value', snap => {
-                $('#comentario-' + index).prepend(`
-                <div class="col-2" style="border-right: 2px solid #404040;">
-                    <div class="row no-gutters no-padding justify-content-start m-1">
-                        <div class="col-12" style="padding: 20px; padding-bottom: 0;">
-                            <img src="` + snap.val().imagen + `" class="icon-foro">
+            var imgref = storageRef.child('profile-images/' + comentario.uid);
+            imgref.getDownloadURL().then(url => {
+                db.ref('usuarios/' + comentario.uid).once('value', snap => {
+                    $('#comentario-' + index).prepend(`
+                    <div class="col-2" style="border-right: 2px solid #404040;">
+                        <div class="row no-gutters no-padding justify-content-start m-1">
+                            <div class="col-12" style="padding: 20px; padding-bottom: 0;">
+                                <img src="` + url + `" class="icon-foro">
+                            </div>
+                            <div class="col-12 align-items-center">
+                                <div class="row justify-content-center no-gutters no-padding">
+                                    <p class="no-padding no-gutters text-comentario comentario-nombre" style=margin-top:10px;>` + snap.val().nombre + `</p>
+                                </div>
+                                <div class="row no-gutters no-padding">
+                                <p class="cita-comentario text-center no-gutters">` + (snap.val().mensaje == "Null" ? "" : `"` + snap.val().mensaje + `"`) + `</p>
+                                </div>
+                                <div class="row no-gutters no-padding justify-content-center">
+                                    <p class="text-comentario comentario-fecha no-gutters no-padding">` + comentario.fecha_publicacion + `</p>
+                                </div>
+                                <div class="row no-gutters no-padding justify-content-center">
+                                    <p class="text-comentario comentario-fecha no-padding no-gutters">` + comentario.hora_publicacion + `</p>
+                                </div>
+                            </div>
+                            
                         </div>
-                        <div class="col-12 align-items-center">
-                            <div class="row justify-content-center no-gutters no-padding">
-                                <p class="no-padding no-gutters text-comentario comentario-nombre" style=margin-top:10px;>` + snap.val().nombre + `</p>
-                            </div>
-                            <div class="row no-gutters no-padding">
-                            <p class="cita-comentario text-center no-gutters">"` + snap.val().mensaje + `"</p>
-                            </div>
-                            <div class="row no-gutters no-padding justify-content-center">
-                                <p class="text-comentario comentario-fecha no-gutters no-padding">` + comentario.fecha_publicacion + `</p>
-                            </div>
-                            <div class="row no-gutters no-padding justify-content-center">
-                                <p class="text-comentario comentario-fecha no-padding no-gutters">` + comentario.hora_publicacion + `</p>
-                            </div>
+                    </div>
+                    <div class="col-10 align-items-center ">
+                        <div class="row no-gutters no-padding ">
+                            <p class="no-padding no-gutters text-comentario comentario p-3" style="max-width: 100%; margin-left: 5px;">` + comentario.comentario + `</p>
                         </div>
-                        
                     </div>
-                </div>
-                <div class="col-10 align-items-center ">
-                    <div class="row no-gutters no-padding ">
-                        <p class="no-padding no-gutters text-comentario comentario p-3" style="max-width: 100%; margin-left: 5px;">` + comentario.comentario + `</p>
-                    </div>
-                </div>
-                `);
+                    `);
+                });
             });
         }
     });
