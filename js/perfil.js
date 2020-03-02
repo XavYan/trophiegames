@@ -1,55 +1,32 @@
-// Variables globales
-var db = firebase.database();
-var storageRef = firebase.storage().ref();
-var userdata;
-
-firebase.auth().onAuthStateChanged( user => {
-    if (user) {
-        userdata = user;
-    } else {
-        console.log('No estas logueado');
-    }
-});
-
 // Descargamos los datos del usuario
-db.ref('usuarios').once('value', snap => {
-    console.log(snap.val());
+setTimeout(() => {
 
-    for (usuario of snap.val()) {
-        console.log(usuario + ', ' + userdata);
-        if (usuario == null) continue;
-        if (usuario.email == userdata.email) {
-            $('#name-user').text(usuario.nombre.charAt(0).toUpperCase() + usuario.nombre.slice(1));
-            $('#nac-user').text(usuario.fecha_nacimiento);
-            $('#img-user').attr('src', usuario.imagen);
-            $('#user-email').text(usuario.email);
-            $('#user-personal-message').text('"'+usuario.mensaje+'"');
-        }
+    if (USERDATA.providerData[0].providerId == "google.com") {
+        $('#act-correo').attr('disabled', true);
+        $('#act-passwd').attr('disabled', true);
+        $('#input-actual-email-delete-label').addClass('hide-object');
+        $('#input-actual-email-delete').addClass('hide-object');
+        $('#input-actual-passwd-delete-label').addClass('hide-object');
+        $('#input-actual-passwd-delete').addClass('hide-object');
     }
-});
 
-function changePhoto (file) {
+    $('#name-user').text(USERDATA.displayName.charAt(0).toUpperCase() + USERDATA.displayName.slice(1));
+    $('#img-user').attr('src', USERDATA.photoURL);
+    $('#user-email').text(USERDATA.email);
 
-    var ref = storageRef.child('profile-images/'+userdata.email+'-profile_image-'+file.name);
-
-    ref.put(file).then ( snapshot => {
-        ref.getDownloadURL().then ( url => {
-            db.ref('usuarios').once('value', snap => {
-                snap.val().forEach( (user, index) => {
-                    if (user.email == userdata.email) {
-                        var userRef = db.ref().child('usuarios/'+index);
-                        userRef.update({ 'imagen': url });
-                    }
-                });
-            });
-        });
+    db.ref('usuarios/' + USERDATA.uid).once('value', snap => {
+        $('#nac-user').text(snap.val().fecha_nacimiento);
+        if (snap.val().mensaje != "Null") {
+            $('#user-personal-message').text('"' + snap.val().mensaje + '"');
+        } else {
+            $('#user-personal-message').text('No dispone de ningún mensaje personal.');
+        }
     });
-}
+
+}, 1000);
 
 document.getElementById('input-img-file').addEventListener('change', event => {
     var file = event.target.files[0];
-
-    // console.log(file);
 
     changePhoto(file);
 
@@ -58,52 +35,25 @@ document.getElementById('input-img-file').addEventListener('change', event => {
 
 document.getElementById('confirmar-name').addEventListener('click', event => {
     var data = $('#input-new-name').val();
-    db.ref('usuarios').once('value', snap => {
-        snap.val().forEach( (user, index) => {
-            if (user.email == userdata.email) {
-                var userRef = db.ref().child('usuarios/'+index);
-                userRef.update({ 'nombre' : data });
-            }
-        });
-    });
+
+    changeName(data);
 
     setTimeout(() => { location.reload(); }, 1000);
 });
 
 document.getElementById('confirmar-email').addEventListener('click', event => {
-    var data = $('#input-new-email').val();
-    db.ref('usuarios').once('value', snap => {
-        snap.val().forEach( (user, index) => {
-            if (user.email == userdata.email) {
-                var userRef = db.ref().child('usuarios/'+index);
-                userRef.update({ 'email' : data });
-                var user = firebase.auth().currentUser;
-                var credential = firebase.auth.EmailAuthProvider.credential(
-                    $('#input-actual-email-email').val(), 
-                    $('#input-actual-passwd-email').val()
-                );;
-                user.reauthenticateWithCredential(credential).then ( () => {
-                    firebase.auth().currentUser.updateEmail(data).then(() => {
-                        setTimeout(() => { location.reload(); }, 1000);
-                    });
-                }).catch( error => {
-                    alert(error.code+': '+error.message);
-                });
-            }
-        });
-    });
+    var new_email = $('#input-new-email').val();
+
+    var actual_email = $('#input-actual-email-email').val();
+    var actual_passwd = $('#input-actual-passwd-email').val();
+
+    changeEmail(actual_email, actual_passwd, new_email);
 });
 
 document.getElementById('confirmar-message').addEventListener('click', event => {
     var data = $('#input-new-message').val();
-    db.ref('usuarios').once('value', snap => {
-        snap.val().forEach( (user, index) => {
-            if (user.email == userdata.email) {
-                var userRef = db.ref().child('usuarios/'+index);
-                userRef.update({ 'mensaje' : data });
-            }
-        });
-    });
+
+    changePersonalMessage(data);
 
     setTimeout(() => { location.reload(); }, 1000);
 });
@@ -111,38 +61,21 @@ document.getElementById('confirmar-message').addEventListener('click', event => 
 document.getElementById('confirmar-passwd').addEventListener('click', event => {
     var data = $('#input-new-passwd').val();
 
-    var user = firebase.auth().currentUser;
-    var credential = firebase.auth.EmailAuthProvider.credential(
-        $('#input-actual-email-passwd').val(), 
-        $('#input-actual-passwd-passwd').val()
-    );;
+    var actual_email = $('#input-actual-email-passwd').val();
+    var actual_passwd = $('#input-actual-passwd-passwd').val();
 
-    user.reauthenticateWithCredential(credential).then ( () => {
-        firebase.auth().currentUser.updatePassword(data).then( () => {
-            setTimeout(() => { location.reload(); }, 1000);
-        });
-    }).catch( error => {
-        alert(error.code+': '+error.message);
-    });
-
+    changePassword(actual_email, actual_passwd, data);
 });
 
 document.getElementById('confirmar-delete').addEventListener('click', event => {
-    var user = firebase.auth().currentUser;
-    var credential = firebase.auth.EmailAuthProvider.credential(
-        $('#input-actual-email-delete').val(), 
-        $('#input-actual-passwd-delete').val()
-    );
 
-    user.reauthenticateWithCredential(credential).then ( () => {
-        user.delete().then ( () => {
-            alert('Tu cuenta ha sido borrada satisfactoriamente.');
-            window.location = 'index.html';
-        }).catch(() => {
-            alert(error.code+': '+error.message);
-        });
-    }).catch( error => {
-        alert(error.code+': '+error.message);
-    });
+    if (USERDATA.providerData[0].providerId != "google.com") {
+        var email = $('#input-actual-email-delete').val();
+        var passwd = $('#input-actual-passwd-delete').val();
+
+        deleteUser(email, passwd);
+    } else {
+        solDeleteGoogleUser();
+    }
 
 });

@@ -4,7 +4,6 @@ h3,
 h4,
 h5,
 h6,
-p,
 th,
 label {
     font-family: 'McLaren';
@@ -529,10 +528,6 @@ img {
     margin-right: 20px;
     margin-bottom: 5px;
     cursor: pointer;
-}
-
-.footer-analisis {
-    margin-top: 50px;
 }
 
 .img-analisis {

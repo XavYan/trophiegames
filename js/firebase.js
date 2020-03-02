@@ -16,3 +16,4 @@ firebase.analytics();
 
 // Declarando variables
 var db = firebase.database();
+var storageRef = firebase.storage().ref();
