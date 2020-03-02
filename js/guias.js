@@ -21,7 +21,7 @@ db.ref('guias').once('value', snap => {
             $('#guia-'+index).prepend(`
             
                 <div class="col-xl-1 col-3 align-self-center">
-                    <img src="` + snap.val().url + `" class="img-analisis no-gutters no-padding">
+                    <img src="` + snap.val().img + `" class="img-analisis no-gutters no-padding">
                 </div>
                 <div class="col-9 align-items-center" style="height: 75px;">
                     <div class="row no-gutters no-padding">
