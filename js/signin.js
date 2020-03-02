@@ -59,9 +59,8 @@ function registerUserData(nombre, nacimiento, mensaje, img = "https://firebasest
 
     // Añadimos los datos restantes a la base de datos
     db.ref('usuarios/' + user.uid).set({
-        fecha_nacimiento: nacimiento,
         mensaje: mensaje,
-        pais: "españa"
+        nombre: nombre
     });
 }
 
